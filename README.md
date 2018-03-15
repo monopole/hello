@@ -7,7 +7,7 @@ The server emits a page that contains its version,
 followed by a greeting, followed by the value specified
 in request path.
 
-If the path is the word `quit`, the server exits.
+A request path of `/quit` exits the server.
 
 
 ### Configuration Knobs
@@ -49,9 +49,9 @@ function buildVersionedExecutable {
 }
 ```
 
-<!-- @funcRunAndQuitRawBinary -->
+<!-- @funcRunAndQuitRawBinaryToTest -->
 ```
-function runAndQuitRawBinary {
+function runAndQuitRawBinaryToTest {
   local tmpDir=$1
   local pgmName=$2
   local port=$3
@@ -96,9 +96,9 @@ EOF
 ```
 
 
-<!-- @funcRunAndQuitInsideDocker -->
+<!-- @funcRunAndQuitInsideDockerToTest -->
 ```
-function runAndQuitInsideDocker {
+function runAndQuitInsideDockerToTest {
   local pgmName=$1
   local version=$2
   local port=$3
@@ -141,12 +141,12 @@ function buildContainer {
 
   echo tmpDir=$tmpDir
   buildVersionedExecutable $tmpDir $githubOrg $pgmName $version
-  runAndQuitRawBinary $tmpDir $pgmName $testPort
+  runAndQuitRawBinaryToTest $tmpDir $pgmName $testPort
 
   buildDockerImage $tmpDir $pgmName $version
   docker images --no-trunc | grep $pgmName
   sleep 4
-  runAndQuitInsideDocker $pgmName $version $testPort
+  runAndQuitInsideDockerToTest $pgmName $version $testPort
 }
 ```
 
