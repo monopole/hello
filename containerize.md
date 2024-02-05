@@ -7,7 +7,7 @@ Define these first; they get used below.
 Requirments: _Go_ compiler, _curl_, and _docker_.
 
 <!-- @funcBuildVersionedExecutable -->
-```
+```sh
 function buildVersionedExecutable {
   local tmpDir=$1
   local githubUser=$2
@@ -31,7 +31,7 @@ function buildVersionedExecutable {
 ```
 
 <!-- @funcRunAndQuitRawBinaryToTest -->
-```
+```sh
 function runAndQuitRawBinaryToTest {
   local tmpDir=$1
   local pgmName=$2
@@ -54,7 +54,7 @@ function runAndQuitRawBinaryToTest {
 ```
 
 <!-- @funcBuildDockerImage -->
-```
+```sh
 function buildDockerImage {
   local tmpDir=$1
   local pgmName=$2
@@ -78,7 +78,7 @@ EOF
 
 
 <!-- @funcRunAndQuitInsideDockerToTest -->
-```
+```sh
 function runAndQuitInsideDockerToTest {
   local pgmName=$1
   local version=$2
@@ -96,7 +96,7 @@ function runAndQuitInsideDockerToTest {
 ```
 
 <!-- @funcPushToDockerHub -->
-```
+```sh
 function pushToDockerHub {
   local dockerUser=$1
   local pgmName=$2
@@ -112,7 +112,7 @@ function pushToDockerHub {
 ```
 
 <!-- @funcBuildContainer -->
-```
+```sh
 function buildContainer {
   local githubOrg=$1
   local pgmName=$2
@@ -132,7 +132,7 @@ function buildContainer {
 ```
 
 <!-- @funcRemoveLocalImage -->
-```
+```sh
 function removeLocalImage {
   local pgmName=$1
   local version=$2
@@ -148,25 +148,25 @@ function removeLocalImage {
 ### Create and upload images to [hub.docker.com](https://hub.docker.com/r/monopole/hello)
 
 <!-- @setUp -->
-```
+```sh
 dockerUser=monopole
 githubOrg=monopole
 ```
 
 <!-- @login -->
-```
+```sh
 printf "\nEnter docker password, followed by C-d: "
 docker login --username=$dockerUser --password-stdin
 ```
 
 <!-- @doVersion1 -->
-```
+```sh
 buildContainer $githubOrg hello 1 8999
 pushToDockerHub $dockerUser hello 1
 ```
 
 <!-- @doVersion2 -->
-```
+```sh
 buildContainer $githubOrg hello 2 8999
 pushToDockerHub $dockerUser hello 2
 ```
@@ -176,18 +176,18 @@ pushToDockerHub $dockerUser hello 2
 Remove the images from the local cache, then run them.
 This forces a new pull.
 
-```
+```sh
 removeLocalImage hello 1
 removeLocalImage hello 2
 ```
 
-```
+```sh
 docker run -d -p 8999:8080 docker.io/$dockerUser/hello:1
 curl -m 1 localhost:8999/shouldBeV1
 curl -m 1 localhost:8999/quit
 ```
 
-```
+```sh
 docker run -d -p 8999:8080 docker.io/$dockerUser/hello:2
 curl -m 1 localhost:8999/shouldBeV2
 curl -m 1 localhost:8999/quit
